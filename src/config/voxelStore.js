@@ -1,4 +1,4 @@
-const voxelStore = {};
+const voxelStore = [];
 const color = [ 
   '#ffffff', 
   '#000000',

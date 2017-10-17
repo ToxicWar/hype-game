@@ -3,15 +3,22 @@ import voxelStore from 'config/voxelStore.js';
 import createGame, { user } from './main.js';
 import _ from 'lodash';
 import { alert } from 'notie';
+import Worker from './voxels.worker.js'
+
+const worker = new Worker()
+
+worker.addEventListener('message', (event) => {
+  console.log(event);
+  if (event.data.type = "complite") {
+    _.forEach(event.data.data, (val) => game.createBlock([val.x, val.z, val.y], val.owner));
+  }
+});
 
 let socket;
 
 async function loadVoxels(data) {
-  await Promise.all(data.map(
-    async (val) => {
-      await game.createBlock([val.x, val.z, val.y], val.owner);
-    }
-  ));
+
+  await worker.postMessage({type: 'range', data, voxelStore});
 }
 
 const start = () => {
@@ -41,7 +48,6 @@ const start = () => {
 
     if (data.meta.type === 'update') {
       const voxel = data.data;
-      console.log(voxel);
       game.createBlock([voxel.x, voxel.z, voxel.y], voxel.owner);
     }
 
@@ -57,7 +63,7 @@ const start = () => {
     const userPositon = user.getPosition();
     const range = config.ws.range;
 
-    socket.send(socket.sendWs('range', { x: userPositon.x, y: userPositon.y, range }));
+    socket.send(socket.sendWs('range', { x: userPositon.x, y: userPositon.z, range }));
   }
 }
 

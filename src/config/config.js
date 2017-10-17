@@ -2,15 +2,17 @@ import { color } from './voxelStore.js';
 
 const controls = {
   discreteFire: true,
+  airControl: false,
 };
 
 const ws = {
   url: 'wss://turg-svc.herokuapp.com/v1/ws/',
-  range: 50,
+  range: 5,
 }
 
 const options = {
-  chunkDistance: 3,
+  chunkDistance: 4,
+  removeDistance: 20,
   generate: (x, y, z) => y === 0,
   lightsDisabled: true,
   materials: color,

@@ -23,7 +23,16 @@ const controls = (game, user) => {
     const range = config.ws.range;
 
     socket.sendWs('range', { x: userPositon.x, y: userPositon.z, range });
+
+    game.voxels.requestMissingChunks(game.playerPosition())
   });
+
+  game.on('renderChunk', (chunk) => {
+    const pos = game.chunkToWorld(chunk.position);
+    // const store = voxelStore[`${pos[0]}|${pos[2]}`]
+  });
+
+  game.removeFarChunks = () => true;
 
   game.on('fire', (target, state) => {
     const position = blockPosPlace;
